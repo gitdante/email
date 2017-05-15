@@ -1,8 +1,8 @@
 import smtplib
 from email.mime.text import MIMEText
-_user =
-_pwd  =
-_to   = 
+_user =raw_input("user name")
+_pwd  =raw_input("password")
+_to   =raw_input("to")
 
 msg = MIMEText("new episode")
 msg["Subject"] = "new episode"
