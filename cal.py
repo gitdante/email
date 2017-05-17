@@ -12,6 +12,7 @@ def cal8daysum(l):
     start=1
     end=1
     cal8 = []
+    l = np.array(l)
     while end!=121:
         end += 8
         cal8.append(np.sum(l[start:end,:,:],axis=0))
@@ -20,18 +21,18 @@ def cal8daysum(l):
     return cal8
 
 def writetif(l):
-    fid1 = gdal.Open(l[0], gdal.GA_ReadOnly)
+    fid1 = gdal.Open(files[0], gdal.GA_ReadOnly)
     prj = fid1.GetProjection()
     geo = fid1.GetGeoTransform()
     lat = fid1.GetRasterBand(1).ReadAsArray()
     dims = np.shape(lat)
     driver = gdal.GetDriverByName('GTiff')
-    for i in l:
-        ds = driver.Create('8'+i, dims[1], dims[0], 1, gdal.GDT_Float32)
+    for i in range(15):
+        ds = driver.Create('8'+files[i], dims[1], dims[0], 1, gdal.GDT_Float32)
         ds.SetGeoTransform(geo)
         ds.SetProjection(prj)
         band = ds.GetRasterBand(1)
-        band.WriteArray(i)
+        band.WriteArray(l[i,:,:])
         ds.FlushCache()
     return 'done'
 
@@ -41,4 +42,5 @@ a =[]
 for i in files:
     a.append(readdata(i))
 b = cal8daysum(a)
+print  b.shape
 writetif(b)
